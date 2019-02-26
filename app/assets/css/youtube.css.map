@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAEI,gBAFY,CAEZ,GAAG;AADP,cAAc,CACV,GAAG,CAAC;EACA,KAAK,EAAE,IAAI;EACX,YAAY,EAAE,IAClB;CAAC",
+    "sources": [
+        "youtube.scss"
+    ],
+    "names": [],
+    "file": "youtube.css"
+}
