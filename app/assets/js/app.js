@@ -1,5 +1,5 @@
 requirejs.config({
-    baseUrl: 'app/assets/js/',
+    baseUrl: '/app/assets/js/',
     paths: {
         'text':         'vendor/require.text',
         'jquery':       'vendor/jquery.min',
@@ -11,7 +11,10 @@ requirejs.config({
         'bootstrap': ['jquery']
     }
 });
-var $app = null
+var apiKey = 'AIzaSyAL02xqSBfqMdr1sHxSVXqMC8E5Vum3v2g';
+var youtubeV3 = 'https://www.googleapis.com/youtube/v3/';
+
+
 require([
     'jquery',
     'lodash',
@@ -20,7 +23,16 @@ require([
     require([
         'video/main',
         'search/main'
-    ], function (){
+    ], function (videoMain, searchMain){
+
+        videoMain.init();
+        // searchMain.init();
+
+        var $form = $('.form-inline');
+        $form
+        .on('click', function(event){
+            event.preventDefault()
+        });
     });
 
 })
