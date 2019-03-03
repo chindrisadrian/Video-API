@@ -20,7 +20,7 @@ define([
         var url = youtubeV3 + 'videos?part=snippet,statistics&id=' + videoId + '&key=' + apiKey;;
         $.get(url, null, null, 'json').always(function(response) {
             var video = response.items[0];
-            var videoEmbed = 'https://www.youtube.com/embed/' + videoId + '?rel=0&showinfo=0&autoplay=1';
+            var videoEmbed = 'https://www.youtube.com/embed/' + videoId + '?rel=0&enablejsapi=1&autoplay=1';
             var videoTitle = video.snippet.localized.title;
             var videoViews = toNumber(video.statistics.viewCount);
             var videoRelease = moment(video.snippet.publishedAt).format('LLL');
