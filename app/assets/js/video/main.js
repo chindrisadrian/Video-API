@@ -3,7 +3,8 @@ define([
     'text!/app/views/video/main.html',
     'text!/app/views/video/videoScreen.html',
     'text!/app/views/video/videoDetails.html',
-    'text!/app/views/video/videocomments.html'
+    'text!/app/views/video/videocomments.html',
+    'moment'
 
 ], function 
 (
@@ -11,53 +12,51 @@ define([
     main, 
     videoScreen, 
     videoDetails,
-    videoComments 
+    videoComments,
+    moment
 ){
 
     function renderVideo (videoId) {
         var url = youtubeV3 + 'videos?part=snippet,statistics&id=' + videoId + '&key=' + apiKey;;
         $.get(url, null, null, 'json').always(function(response) {
-            console.log(response)
             var video = response.items[0];
-            console.log(video)
             var videoEmbed = 'https://www.youtube.com/embed/' + videoId + '?rel=0&showinfo=0&autoplay=1';
             var videoTitle = video.snippet.localized.title;
-            var videoViews = video.statistics.viewCount;
-            var videoRelease = video.snippet.publishedAt;
-            var videoLike = video.statistics.likeCount;
-            var videoDislike = video.statistics.dislikeCount;
+            var videoViews = toNumber(video.statistics.viewCount);
+            var videoRelease = moment(video.snippet.publishedAt).format('LLL');
+            var videoLike = toNumber(video.statistics.likeCount);
+            var videoDislike = toNumber(video.statistics.dislikeCount);
             $('.video-screen').html(
                 _.template(videoScreen)({ videoEmbed: videoEmbed, videoTitle: videoTitle, videoViews: videoViews, videoRelease: videoRelease, videoLike: videoLike, videoDislike: videoDislike })
             );
-            var thumbnails = video.snippet.thumbnails.maxres.url || video.snippet.thumbnails.standard.url || video.snippet.thumbnails.high.url;
             var channelTitle = video.snippet.channelTitle;
-            // var videoDescriptions = JSON.stringify(video.snippet.description);
-            var videoDescriptions = video.snippet.description;
-            // videoDescriptions = JSON.stringify(videoDescriptions);
-            console.log(videoDescriptions);
+            var videoDescriptions = video.snippet.description.replace(/(\r\n|\n|\r)/gm, "<br>");
             $('.video-details').html(
-                _.template(videoDetails)({ thumbnails: thumbnails, channelTitle: channelTitle, videoDescriptions: videoDescriptions, videoId: videoId })
+                _.template(videoDetails)({channelTitle: channelTitle, videoDescriptions: videoDescriptions, videoId: videoId })
             )
         })
-        $.get('https://www.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId='+ videoId +'&key='+apiKey, null, null, 'json').always(function(response) {
+        renderComments(videoId)
+    }
+
+    function renderComments(videoId) {
+        $.get(youtubeV3 + 'commentThreads?part=snippet%2Creplies&order=relevance&videoId='+ videoId +'&key='+apiKey, null, null, 'json').always(function(response) {
             $('.video-comments').html(
-                _.template(videoComments)({ items: response.items })
+                _.template(videoComments)({ items: response.items, moment: moment })
             )
-            console.log(response.items)
         })
     }
 
-
-
-
+    function toNumber(nr) {
+        return parseInt(nr).toLocaleString();
+    }
 
     return {
-        init: function(){
+        init: function(videoId){
             var $app = $('#app');    
             $app.html(
                 _.template(header)() +
                 _.template(main)({ videoScreen: videoScreen, videoDetails: videoDetails, videoComments: videoComments })
-            );            
+            );
             var qs = (function(a) {
                 if (a == "") return {};
                 var b = {};
@@ -72,8 +71,8 @@ define([
                 return b;
             })(window.location.search.substr(1).split('&'));
             
-            var videoId = qs.id;
-        renderVideo(videoId);
+            videoId =  qs.id;
+            renderVideo(videoId);
         }
     }
 });

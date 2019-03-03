@@ -1,19 +1,4 @@
 <div class="card-body">
     <h5 class="card-title mt-3 chanal-avatar"><%=channelTitle%></h5>
-    <nav>
-        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-description-tab" data-toggle="tab" href="#nav-description" role="tab" aria-controls="nav-description" aria-selected="true">Description</a>
-            <a class="nav-item nav-link" id="nav-sharing-tab" data-toggle="tab" href="#nav-sharing" role="tab" aria-controls="nav-sharing" aria-selected="false">Sharing</a>
-        </div>
-    </nav>
-    <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
-            <p class="mt-3"><%=videoDescriptions%></p>
-        </div>
-        <div class="tab-pane fade" id="nav-sharing" role="tabpanel" aria-labelledby="nav-sharing-tab">
-            <div class="barLink mt-5">
-                <input id="share-url" size="45" value="https://www.youtube.com/watch?v=<%=videoId%>">
-            </div>
-        </div>
-    </div>
+    <%=videoDescriptions%>
 </div>

@@ -1,27 +1,56 @@
 
 <div class="card">
-        <div class="card-body">
-            <h5 class="card-title text-center ">Comments</h5>
-            <ul class="list-unstyled comments-avatar">
-                <%_.each(items, function(item){%>
-                    <%var avatar = item.snippet.topLevelComment.snippet.authorProfileImageUrl%>
-                    <%var nameUser = item.snippet.topLevelComment.snippet.authorDisplayName%>
-                    <%var comment = item.snippet.topLevelComment.snippet.textDisplay%>
-                
-                    <li class="media my-4">
-                        <img class="rounded-circle" src="<%=avatar%>" class="mr-3" alt="avatar">
-                        <div class="media-body">
-                            <h5 class="mt-0 mb-1"><%=nameUser%></h5>
-                            <%=comment%>
-
-                            <%$.get('https://www.googleapis.com/youtube/v3/comments?part=snippet&parentId=' + item.snippet.topLevelComment.id + '&key='+apiKey, null, null, 'json').always(function(response) {console.log(response)})%>
-                            
-
+    <div class="card-body">
+        <h5 class="card-title text-center ">Comments</h5>
+        <ul class="list-unstyled comments-avatar">
+            <%_.each(items, function(item){%>
+                <%var avatar = item.snippet.topLevelComment.snippet.authorProfileImageUrl%>
+                <%var nameUser = item.snippet.topLevelComment.snippet.authorDisplayName%>
+                <%var comment = item.snippet.topLevelComment.snippet.textDisplay%>
+                <%var commentLike = item.snippet.topLevelComment.snippet.likeCount%>
+                <%var commentRelease = item.snippet.topLevelComment.snippet.publishedAt%>
+                <%console.log(item);%>
+                <div class="media mb-3">
+                    <img class="rounded-circle" src="<%=avatar%>" class="mr-3" alt="avatar">
+                    <div class="media-body">
+                        <span class="h5 mt-0"><%=nameUser%></span>
+                        <p class="text-muted mb-0"><small><%=moment(commentRelease).format('LLL')%></small></p>
+                        <p class="mb-0"><%=comment%></p>
+                        <div class="row">
+                            <div class="col-sm-6 text-muted">
+                                <small><span class="thumbs-up"><i class="far fa-thumbs-up"></i> <%=commentLike%></span></small>
+                            </div>
                         </div>
-                    </li>
-                    
-
-                <%})%>
-            </ul>
-        </div>
+                        <%if(item.snippet.totalReplyCount !== 0) {%>
+                            <button class="btn btn-link p-0 d-block" data-toggle="collapse" href="#<%=item.id%>" role="button" aria-expanded="false" aria-controls="collapseExample">Collapse</button>
+                            <div class="collapse mt-1" id="<%=item.id%>">
+                                <%_.each(item.replies.comments, function(comment){%>
+                                    <%var avatar = comment.snippet.authorProfileImageUrl%>
+                                    <%var nameUser = comment.snippet.authorDisplayName%>
+                                    <%var comment = comment.snippet.textDisplay%>
+                                    <%var commentLike = item.snippet.likeCount%>
+                                    <%var commentRelease = item.snippet.publishedAt%>
+                                    <div class="media mb-3">
+                                        <a href="#">
+                                            <img class="rounded-circle" src="<%=avatar%>" alt="avatar">
+                                        </a>
+                                        <div class="media-body">
+                                            <span class="h5 mt-0"><%=nameUser%></span>
+                                            <p class="text-muted mb-0"><small><%=moment(commentRelease).format('LLL')%></small></p>
+                                            <p class="mb-0"><%=comment%></p>
+                                            <div class="row">
+                                                <div class="col-sm-6 text-muted">
+                                                    <small><span class="thumbs-up"><i class="far fa-thumbs-up"></i> <%=commentLike%></span></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <%})%>
+                            </div>
+                        <%}%>
+                    </div>
+                </div>
+            <%})%>
+        </ul>
     </div>
+</div>

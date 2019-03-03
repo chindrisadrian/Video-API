@@ -1,12 +1,17 @@
-<li class="media">
-    <img src="/app/assets/img/avatar.jpg" class="mr-3" alt="...">
-    <div class="media-body">
-        <h5 class="mt-0 mb-1"><%=nameVideo%></h5>
-        <%=description%>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-        <div class="col-sm-3 text-muted">
-            <span class="thumbs-up"><i class="far fa-thumbs-up"></i> 50K&nbsp;</span>
-            <span class="float-right thumbs-down"><i class="far fa-thumbs-down"></i> 476</span>
-        </div>
-    </div>
-</li>
+
+            <%_.each(items, function(item){%>
+                <%var thumbnail = item.snippet.thumbnails.high.url;%>
+                <%var videoName = item.snippet.title%>
+                <%var videoDescription = item.snippet.description%>
+                <%var videoRelease = moment(item.snippet.publishedAt).format('LLL');%>
+                
+                <li class="media item my-4" data-id="<%=item.id.videoId%>">
+                    <img src="<%=thumbnail%>" class="img-thumbnail mr-3" alt="thumbnail" style="max-width: 200px;">
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1"><%=videoName%></h5>
+                        <%=videoDescription%>
+                        <p class="card-text"><small class="text-muted"><%=videoRelease%></small></p>
+                    </div>
+                </li>
+            <%})%>
+    
